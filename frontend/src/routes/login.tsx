@@ -39,11 +39,15 @@ function LoginPage() {
 
         <div className="rounded-2xl border border-border bg-card/80 p-8 backdrop-blur-xl shadow-elevated">
           <h1 className="font-display text-2xl font-bold">Sign in</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Access your operations command center.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Access your operations command center.
+          </p>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <div>
-              <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Email</label>
+              <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Email
+              </label>
               <input
                 type="email"
                 value={email}
@@ -53,7 +57,9 @@ function LoginPage() {
               />
             </div>
             <div>
-              <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Password</label>
+              <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Password
+              </label>
               <input
                 type="password"
                 value={password}
@@ -62,13 +68,24 @@ function LoginPage() {
                 required
               />
             </div>
-            <button type="submit" className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-primary-foreground shadow-glow transition hover:opacity-90">
+            <button
+              type="submit"
+              className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-primary-foreground shadow-glow transition hover:opacity-90"
+            >
               Sign in →
             </button>
+            <Link
+              to="/"
+              className="flex w-full items-center justify-center rounded-lg border border-border bg-card/40 py-2.5 text-sm font-semibold transition hover:bg-card"
+            >
+              Home
+            </Link>
           </form>
 
           <div className="mt-6 rounded-lg border border-dashed border-border bg-muted/40 p-3">
-            <p className="text-xs font-medium text-muted-foreground">Demo accounts (any password works):</p>
+            <p className="text-xs font-medium text-muted-foreground">
+              Demo accounts (any password works):
+            </p>
             <div className="mt-2 space-y-1">
               {users.map((u) => (
                 <button
@@ -78,7 +95,9 @@ function LoginPage() {
                   className="flex w-full items-center justify-between rounded px-2 py-1 text-left text-xs hover:bg-background"
                 >
                   <span className="font-mono">{u.email}</span>
-                  <span className="rounded bg-primary/15 px-1.5 py-0.5 text-[10px] uppercase text-primary">{u.role}</span>
+                  <span className="rounded bg-primary/15 px-1.5 py-0.5 text-[10px] uppercase text-primary">
+                    {u.role}
+                  </span>
                 </button>
               ))}
             </div>

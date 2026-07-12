@@ -41,27 +41,6 @@ const PIE_COLORS = [
   "var(--muted-foreground)",
 ];
 
-const CustomCostTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div
-        style={{
-          background: "var(--popover)",
-          border: "1px solid var(--border)",
-          borderRadius: 8,
-          padding: "8px 12px",
-          color: "#e2e8f0",
-        }}
-      >
-        <p style={{ margin: "0 0 4px 0", color: "#e2e8f0" }}>
-          {payload[0].name}: ₹{payload[0].value.toLocaleString()}
-        </p>
-      </div>
-    );
-  }
-  return null;
-};
-
 function ReportsPage() {
   const { vehicles, trips, expenses, maintenance } = useStore();
 
@@ -331,7 +310,17 @@ function ReportsPage() {
                     <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip content={<CustomCostTooltip />} />
+                <Tooltip
+                  formatter={(value: number) => `₹${value.toLocaleString()}`}
+                  contentStyle={{
+                    background: "var(--popover)",
+                    border: "1px solid var(--border)",
+                    borderRadius: 8,
+                    color: "#e2e8f0",
+                  }}
+                  labelStyle={{ color: "#e2e8f0" }}
+                  wrapperStyle={{ color: "#e2e8f0" }}
+                />
                 <Legend
                   iconType="circle"
                   formatter={(value) => (
