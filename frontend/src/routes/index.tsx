@@ -55,7 +55,7 @@ function Landing() {
               <Truck className="size-5" />
             </div>
             <span className="font-display text-xl font-bold tracking-tight">
-              Fleetwave
+              TransitOps
             </span>
           </div>
           <Link
