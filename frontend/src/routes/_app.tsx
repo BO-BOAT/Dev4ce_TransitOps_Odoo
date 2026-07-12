@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, Link, useRouter, Navigate } from "@tanstack/react-router";
-import { useStore } from "@/lib/store";
+import { useStore, seedVehicles, seedDrivers, seedTrips, seedMaintenance, seedExpenses } from "@/lib/store";
 import { fetchApi } from "@/lib/api";
 import {
   LayoutDashboard, Truck, Users, Route as RouteIcon, Wrench, Receipt,
@@ -42,19 +42,28 @@ function AppLayout() {
         fetchApi("/finance/expenses").catch(() => []),
         fetchApi("/finance/fuel").catch(() => []),
       ]).then(([vehicles, drivers, trips, maintenance, backendExpenses, backendFuel]) => {
+        // Safe array extraction
+        const safeArr = (arr: any) => Array.isArray(arr) ? arr : [];
+        const vArr = safeArr(vehicles);
+        const dArr = safeArr(drivers);
+        const tArr = safeArr(trips);
+        const mArr = safeArr(maintenance);
+        const eArr = safeArr(backendExpenses);
+        const fArr = safeArr(backendFuel);
+
         // Map backend responses to frontend shapes
-        const mappedVehicles = vehicles.map((v: any) => ({
+        const mappedVehicles = vArr.length > 0 ? vArr.map((v: any) => ({
           ...v,
           id: v._id || v.id,
           regNumber: v.registration_number || v.regNumber,
           maxLoadKg: v.capacity || v.maxLoadKg,
           odometer: v.mileage || v.odometer,
           region: v.depot || v.region,
-          type: "Truck", // Backend doesn't have type
-          acquisitionCost: 0, // Backend doesn't have cost
-        }));
+          type: "Truck",
+          acquisitionCost: 0,
+        })) : seedVehicles;
 
-        const mappedDrivers = drivers.map((d: any) => ({
+        const mappedDrivers = dArr.length > 0 ? dArr.map((d: any) => ({
           ...d,
           id: d._id || d.id,
           name: d.name || `${d.first_name} ${d.last_name}`,
@@ -62,10 +71,10 @@ function AppLayout() {
           licenseExpiry: d.license_expiry || d.licenseExpiry,
           contact: d.contact_number || d.contact,
           safetyScore: d.safety_score || d.safetyScore,
-          licenseCategory: "C", // Mock category
-        }));
+          licenseCategory: "C",
+        })) : seedDrivers;
 
-        const mappedTrips = trips.map((t: any) => ({
+        const mappedTrips = tArr.length > 0 ? tArr.map((t: any) => ({
           ...t,
           id: t._id || t.id,
           vehicleId: t.vehicle_id || t.vehicleId,
@@ -74,40 +83,39 @@ function AppLayout() {
           plannedKm: t.planned_distance || t.plannedKm,
           actualKm: t.actual_distance || t.actualKm,
           createdAt: t.created_at || t.createdAt,
-          revenue: 0, // Mock revenue
-        }));
+          revenue: 0,
+        })) : seedTrips;
 
-        const mappedMaintenance = maintenance.map((m: any) => ({
+        const mappedMaintenance = mArr.length > 0 ? mArr.map((m: any) => ({
           ...m,
           id: m._id || m.id,
           vehicleId: m.vehicle_id || m.vehicleId,
           startDate: m.start_date || m.startDate,
           endDate: m.end_date || m.endDate,
-        }));
+        })) : seedMaintenance;
 
-        const expenses = [
-          ...backendExpenses.map((e: any) => ({ 
+        const mappedExpenses = eArr.length > 0 || fArr.length > 0 ? [
+          ...eArr.map((e: any) => ({ 
             ...e, 
             id: e._id || e.id,
             vehicleId: e.vehicle_id || e.vehicleId,
             kind: e.category || e.type || e.kind || "Other" 
           })),
-          ...backendFuel.map((f: any) => ({ 
+          ...fArr.map((f: any) => ({ 
             ...f, 
             id: f._id || f.id,
             vehicleId: f.vehicle_id || f.vehicleId,
             kind: "Fuel", 
             amount: f.cost 
           }))
-        ];
+        ] : seedExpenses;
         
-        const currentStore = useStore.getState();
         hydrate({ 
-          vehicles: mappedVehicles.length ? mappedVehicles : currentStore.vehicles, 
-          drivers: mappedDrivers.length ? mappedDrivers : currentStore.drivers, 
-          trips: mappedTrips.length ? mappedTrips : currentStore.trips, 
-          maintenance: mappedMaintenance.length ? mappedMaintenance : currentStore.maintenance, 
-          expenses: expenses.length ? expenses : currentStore.expenses 
+          vehicles: mappedVehicles, 
+          drivers: mappedDrivers, 
+          trips: mappedTrips, 
+          maintenance: mappedMaintenance, 
+          expenses: mappedExpenses 
         });
       });
     }

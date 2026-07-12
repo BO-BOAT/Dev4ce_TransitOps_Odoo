@@ -102,13 +102,13 @@ interface State {
 const uid = () => Math.random().toString(36).slice(2, 10);
 const today = () => new Date().toISOString();
 
-const seedUsers: User[] = [
+export const seedUsers: User[] = [
   { id: "u1", email: "admin@fleet.io", name: "Alex Admin", role: "admin" },
   { id: "u2", email: "dispatch@fleet.io", name: "Dana Dispatcher", role: "dispatcher" },
   { id: "u3", email: "manager@fleet.io", name: "Morgan Manager", role: "manager" },
 ];
 
-const seedVehicles: Vehicle[] = [
+export const seedVehicles: Vehicle[] = [
   { id: "v1", regNumber: "KA-01-AB-1234", model: "Tata Prima 4928", type: "Truck", maxLoadKg: 25000, odometer: 84300, acquisitionCost: 4200000, status: "Available", region: "South" },
   { id: "v2", regNumber: "MH-12-CD-5678", model: "Ashok Leyland Boss", type: "Truck", maxLoadKg: 16000, odometer: 121500, acquisitionCost: 2900000, status: "On Trip", region: "West" },
   { id: "v3", regNumber: "DL-03-EF-9012", model: "Mahindra Blazo X", type: "Tanker", maxLoadKg: 20000, odometer: 67800, acquisitionCost: 3600000, status: "In Shop", region: "North" },
@@ -117,7 +117,7 @@ const seedVehicles: Vehicle[] = [
   { id: "v6", regNumber: "UP-14-LM-2345", model: "Isuzu D-Max", type: "Pickup", maxLoadKg: 1200, odometer: 96700, acquisitionCost: 1100000, status: "Retired", region: "North" },
 ];
 
-const seedDrivers: Driver[] = [
+export const seedDrivers: Driver[] = [
   { id: "d1", name: "Rajesh Kumar", licenseNumber: "DL-9823741", licenseCategory: "E", licenseExpiry: "2027-06-14", contact: "+91 98204 33421", safetyScore: 92, status: "Available" },
   { id: "d2", name: "Suresh Patel", licenseNumber: "DL-4471209", licenseCategory: "D", licenseExpiry: "2026-02-08", contact: "+91 90112 88291", safetyScore: 88, status: "On Trip" },
   { id: "d3", name: "Meera Iyer", licenseNumber: "DL-6612388", licenseCategory: "C", licenseExpiry: "2028-11-30", contact: "+91 99887 22110", safetyScore: 95, status: "Available" },
@@ -125,17 +125,17 @@ const seedDrivers: Driver[] = [
   { id: "d5", name: "Anita Reddy", licenseNumber: "DL-8814407", licenseCategory: "D", licenseExpiry: "2026-05-11", contact: "+91 90887 12233", safetyScore: 81, status: "Suspended" },
 ];
 
-const seedTrips: Trip[] = [
+export const seedTrips: Trip[] = [
   { id: "t1", source: "Mumbai", destination: "Pune", vehicleId: "v2", driverId: "d2", cargoKg: 14000, plannedKm: 150, status: "Dispatched", createdAt: today() },
   { id: "t2", source: "Bangalore", destination: "Chennai", vehicleId: "v1", driverId: "d1", cargoKg: 22000, plannedKm: 350, actualKm: 358, revenue: 85000, status: "Completed", createdAt: today(), completedAt: today() },
   { id: "t3", source: "Delhi", destination: "Jaipur", vehicleId: "v4", driverId: "d3", cargoKg: 30000, plannedKm: 280, status: "Draft", createdAt: today() },
 ];
 
-const seedMaintenance: MaintenanceRecord[] = [
+export const seedMaintenance: MaintenanceRecord[] = [
   { id: "m1", vehicleId: "v3", description: "Engine overhaul & brake replacement", cost: 68000, startDate: today() },
 ];
 
-const seedExpenses: Expense[] = [
+export const seedExpenses: Expense[] = [
   { id: "e1", vehicleId: "v1", kind: "Fuel", amount: 28500, liters: 320, date: today(), note: "Full tank Bangalore depot" },
   { id: "e2", vehicleId: "v1", kind: "Toll", amount: 2400, date: today() },
   { id: "e3", vehicleId: "v2", kind: "Fuel", amount: 12200, liters: 140, date: today() },
