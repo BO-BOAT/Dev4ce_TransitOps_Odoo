@@ -35,24 +35,37 @@ export const Route = createFileRoute("/_app/reports")({
   component: ReportsPage,
 });
 
-const PIE_COLORS = ["var(--primary)", "var(--warning)", "var(--muted-foreground)"];
+const PIE_COLORS = [
+  "var(--primary)",
+  "var(--warning)",
+  "var(--muted-foreground)",
+];
 
 function ReportsPage() {
   const { vehicles, trips, expenses, maintenance } = useStore();
 
   const perVehicle = useMemo(() => {
     return vehicles.map((v) => {
-      const fuelExp = expenses.filter((e) => e.vehicleId === v.id && e.kind === "Fuel");
+      const fuelExp = expenses.filter(
+        (e) => e.vehicleId === v.id && e.kind === "Fuel",
+      );
       const totalFuelCost = fuelExp.reduce((s, e) => s + e.amount, 0);
       const totalLiters = fuelExp.reduce((s, e) => s + (e.liters ?? 0), 0);
-      const maintCost = maintenance.filter((m) => m.vehicleId === v.id).reduce((s, m) => s + m.cost, 0);
-      const otherCost = expenses.filter((e) => e.vehicleId === v.id && e.kind !== "Fuel").reduce((s, e) => s + e.amount, 0);
-      const completed = trips.filter((t) => t.vehicleId === v.id && t.status === "Completed");
+      const maintCost = maintenance
+        .filter((m) => m.vehicleId === v.id)
+        .reduce((s, m) => s + m.cost, 0);
+      const otherCost = expenses
+        .filter((e) => e.vehicleId === v.id && e.kind !== "Fuel")
+        .reduce((s, e) => s + e.amount, 0);
+      const completed = trips.filter(
+        (t) => t.vehicleId === v.id && t.status === "Completed",
+      );
       const distance = completed.reduce((s, t) => s + (t.actualKm ?? 0), 0);
       const revenue = completed.reduce((s, t) => s + (t.revenue ?? 0), 0);
       const fuelEff = totalLiters > 0 ? distance / totalLiters : 0;
       const totalCost = totalFuelCost + maintCost + otherCost;
-      const roi = v.acquisitionCost > 0 ? (revenue - totalCost) / v.acquisitionCost : 0;
+      const roi =
+        v.acquisitionCost > 0 ? (revenue - totalCost) / v.acquisitionCost : 0;
       return {
         veh: v.regNumber,
         distance,
@@ -72,16 +85,31 @@ function ReportsPage() {
     const totalCost = perVehicle.reduce((s, r) => s + r.totalCost, 0);
     const totalDistance = perVehicle.reduce((s, r) => s + r.distance, 0);
     const netProfit = totalRevenue - totalCost;
-    const overallROI = totalCost > 0 ? ((totalRevenue - totalCost) / totalCost) * 100 : 0;
-    const totalFuelLiters = expenses.filter((e) => e.kind === "Fuel").reduce((s, e) => s + (e.liters ?? 0), 0);
-    const avgFuelEff = totalFuelLiters > 0 ? totalDistance / totalFuelLiters : 0;
-    return { totalRevenue, totalCost, totalDistance, netProfit, overallROI: +overallROI.toFixed(1), avgFuelEff: +avgFuelEff.toFixed(2) };
+    const overallROI =
+      totalCost > 0 ? ((totalRevenue - totalCost) / totalCost) * 100 : 0;
+    const totalFuelLiters = expenses
+      .filter((e) => e.kind === "Fuel")
+      .reduce((s, e) => s + (e.liters ?? 0), 0);
+    const avgFuelEff =
+      totalFuelLiters > 0 ? totalDistance / totalFuelLiters : 0;
+    return {
+      totalRevenue,
+      totalCost,
+      totalDistance,
+      netProfit,
+      overallROI: +overallROI.toFixed(1),
+      avgFuelEff: +avgFuelEff.toFixed(2),
+    };
   }, [perVehicle, expenses]);
 
   const costDistribution = useMemo(() => {
-    const totalFuel = expenses.filter((e) => e.kind === "Fuel").reduce((s, e) => s + e.amount, 0);
+    const totalFuel = expenses
+      .filter((e) => e.kind === "Fuel")
+      .reduce((s, e) => s + e.amount, 0);
     const totalMaint = maintenance.reduce((s, m) => s + m.cost, 0);
-    const totalOther = expenses.filter((e) => e.kind !== "Fuel").reduce((s, e) => s + e.amount, 0);
+    const totalOther = expenses
+      .filter((e) => e.kind !== "Fuel")
+      .reduce((s, e) => s + e.amount, 0);
     return [
       { name: "Fuel", value: totalFuel },
       { name: "Maintenance", value: totalMaint },
@@ -91,7 +119,9 @@ function ReportsPage() {
 
   const active = vehicles.filter((v) => v.status === "On Trip").length;
   const dispatchable = vehicles.filter((v) => v.status !== "Retired").length;
-  const utilization = dispatchable ? Math.round((active / dispatchable) * 100) : 0;
+  const utilization = dispatchable
+    ? Math.round((active / dispatchable) * 100)
+    : 0;
 
   const handlePrintPDF = () => {
     const printWindow = window.open("", "_blank");
@@ -170,14 +200,48 @@ function ReportsPage() {
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {[
-          { label: "Revenue", value: `₹${summary.totalRevenue.toLocaleString()}`, color: "text-success", icon: IndianRupee },
-          { label: "Total Cost", value: `₹${summary.totalCost.toLocaleString()}`, color: "text-foreground", icon: Wrench },
-          { label: "Net Profit", value: `₹${summary.netProfit.toLocaleString()}`, color: summary.netProfit >= 0 ? "text-success" : "text-destructive", icon: summary.netProfit >= 0 ? TrendingUp : TrendingDown },
-          { label: "Overall ROI", value: `${summary.overallROI}%`, color: summary.overallROI >= 0 ? "text-success" : "text-destructive", icon: summary.overallROI >= 0 ? TrendingUp : TrendingDown },
-          { label: "Total Distance", value: `${summary.totalDistance.toLocaleString()} km`, color: "text-primary", icon: MapPin },
-          { label: "Avg Fuel Eff.", value: `${summary.avgFuelEff} km/L`, color: "text-primary", icon: Fuel },
+          {
+            label: "Revenue",
+            value: `₹${summary.totalRevenue.toLocaleString()}`,
+            color: "text-success",
+            icon: IndianRupee,
+          },
+          {
+            label: "Total Cost",
+            value: `₹${summary.totalCost.toLocaleString()}`,
+            color: "text-foreground",
+            icon: Wrench,
+          },
+          {
+            label: "Net Profit",
+            value: `₹${summary.netProfit.toLocaleString()}`,
+            color: summary.netProfit >= 0 ? "text-success" : "text-destructive",
+            icon: summary.netProfit >= 0 ? TrendingUp : TrendingDown,
+          },
+          {
+            label: "Overall ROI",
+            value: `${summary.overallROI}%`,
+            color:
+              summary.overallROI >= 0 ? "text-success" : "text-destructive",
+            icon: summary.overallROI >= 0 ? TrendingUp : TrendingDown,
+          },
+          {
+            label: "Total Distance",
+            value: `${summary.totalDistance.toLocaleString()} km`,
+            color: "text-primary",
+            icon: MapPin,
+          },
+          {
+            label: "Avg Fuel Eff.",
+            value: `${summary.avgFuelEff} km/L`,
+            color: "text-primary",
+            icon: Fuel,
+          },
         ].map((s) => (
-          <div key={s.label} className="rounded-xl border border-border bg-card p-4">
+          <div
+            key={s.label}
+            className="rounded-xl border border-border bg-card p-4"
+          >
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <s.icon className="size-3.5" />
               {s.label}
@@ -199,7 +263,9 @@ function ReportsPage() {
               <RadialBarChart
                 innerRadius="70%"
                 outerRadius="100%"
-                data={[{ name: "util", value: utilization, fill: "var(--primary)" }]}
+                data={[
+                  { name: "util", value: utilization, fill: "var(--primary)" },
+                ]}
                 startAngle={90}
                 endAngle={-270}
               >
@@ -250,12 +316,15 @@ function ReportsPage() {
                     background: "var(--popover)",
                     border: "1px solid var(--border)",
                     borderRadius: 8,
+                    color: "#e2e8f0",
                   }}
                 />
                 <Legend
                   iconType="circle"
                   formatter={(value) => (
-                    <span className="text-xs text-muted-foreground">{value}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {value}
+                    </span>
                   )}
                 />
               </PieChart>
@@ -279,15 +348,22 @@ function ReportsPage() {
                   textAnchor="end"
                   height={50}
                 />
-                <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} />
+                <YAxis
+                  tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
+                />
                 <Tooltip
                   contentStyle={{
                     background: "var(--popover)",
                     border: "1px solid var(--border)",
                     borderRadius: 8,
+                    color: "#e2e8f0",
                   }}
                 />
-                <Bar dataKey="fuelEff" fill="var(--accent)" radius={[6, 6, 0, 0]} />
+                <Bar
+                  dataKey="fuelEff"
+                  fill="var(--accent)"
+                  radius={[6, 6, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -312,6 +388,7 @@ function ReportsPage() {
                   background: "var(--popover)",
                   border: "1px solid var(--border)",
                   borderRadius: 8,
+                  color: "#e2e8f0",
                 }}
               />
               <Legend />
@@ -349,7 +426,9 @@ function ReportsPage() {
               <tr>
                 <th className="px-4 py-3 text-left font-medium">Vehicle</th>
                 <th className="px-4 py-3 text-left font-medium">Distance</th>
-                <th className="px-4 py-3 text-left font-medium">Fuel Efficiency</th>
+                <th className="px-4 py-3 text-left font-medium">
+                  Fuel Efficiency
+                </th>
                 <th className="px-4 py-3 text-left font-medium">Fuel Cost</th>
                 <th className="px-4 py-3 text-left font-medium">Maint. Cost</th>
                 <th className="px-4 py-3 text-left font-medium">Other Cost</th>
@@ -359,9 +438,14 @@ function ReportsPage() {
             </thead>
             <tbody>
               {perVehicle.map((r) => (
-                <tr key={r.veh} className="border-t border-border hover:bg-muted/30">
+                <tr
+                  key={r.veh}
+                  className="border-t border-border hover:bg-muted/30"
+                >
                   <td className="px-4 py-3 font-mono text-xs">{r.veh}</td>
-                  <td className="px-4 py-3">{r.distance.toLocaleString()} km</td>
+                  <td className="px-4 py-3">
+                    {r.distance.toLocaleString()} km
+                  </td>
                   <td className="px-4 py-3">
                     {r.fuelEff > 0 ? (
                       <span className="text-primary">{r.fuelEff} km/L</span>
