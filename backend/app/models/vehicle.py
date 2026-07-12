@@ -2,10 +2,11 @@ from datetime import datetime, timezone
 from typing import Optional
 from beanie import Document
 from pydantic import Field
+from app.schemas.vehicle import VehicleStatus
 
 class Vehicle(Document):
     registration_number: str = Field(unique=True)
-    status: str = "Available"  # Available, On Trip, In Shop, Retired
+    status: VehicleStatus = VehicleStatus.available
     make: str
     model: str
     year: int
