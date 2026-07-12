@@ -78,6 +78,7 @@ interface State {
   login: (email: string, password: string) => User | null;
   logout: () => void;
   toggleTheme: () => void;
+  hydrate: (data: Partial<State>) => void;
 
   addVehicle: (v: Omit<Vehicle, "id">) => { ok: boolean; error?: string };
   updateVehicle: (id: string, v: Partial<Vehicle>) => void;
@@ -161,6 +162,8 @@ export const useStore = create<State>()(
       },
       logout: () => set({ currentUser: null }),
       toggleTheme: () => set({ theme: get().theme === "dark" ? "light" : "dark" }),
+      
+      hydrate: (data) => set((state) => ({ ...state, ...data })),
 
       addVehicle: (v) => {
         const exists = get().vehicles.some((x) => x.regNumber.toLowerCase() === v.regNumber.toLowerCase());

@@ -15,12 +15,40 @@ function LoginPage() {
   const [email, setEmail] = useState("admin@fleet.io");
   const [password, setPassword] = useState("demo");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const setLogin = useStore((s) => s.login); // Note: we'll have to adapt this if we change store
+  
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const u = login(email, password);
-    if (!u) return toast.error("Invalid credentials");
-    toast.success(`Welcome, ${u.name}`);
-    navigate({ to: "/dashboard" });
+    try {
+      const formData = new URLSearchParams();
+      formData.append("username", email);
+      formData.append("password", password);
+      const API_URL = import.meta.env.VITE_API_URL || "/api/v1";
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Invalid credentials");
+      }
+
+      const data = await response.json();
+      localStorage.setItem("access_token", data.access_token);
+      
+      const u = setLogin(email, password); 
+      if (u) {
+        toast.success(`Welcome, ${u.name}`);
+      } else {
+        toast.success(`Welcome, ${email}`);
+      }
+      navigate({ to: "/dashboard" });
+    } catch (err) {
+      toast.error("Invalid credentials");
+    }
   };
 
   return (
