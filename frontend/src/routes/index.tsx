@@ -69,7 +69,7 @@ function Landing() {
 
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grid-bg opacity-40" />
-        <div className="absolute -top-32 left-1/2 h-96 w-[42rem] -translate-x-1/2 rounded-full bg-primary/25 blur-[120px]" />
+        <div className="absolute -top-32 left-1/2 h-96 w-42rem -translate-x-1/2 rounded-full bg-primary/25 blur-120px" />
         <div className="relative mx-auto max-w-7xl px-6 py-24 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
             <span className="size-1.5 rounded-full bg-accent animate-pulse" />
@@ -77,7 +77,7 @@ function Landing() {
           </div>
           <h1 className="mx-auto mt-6 max-w-4xl font-display text-5xl font-bold leading-[1.05] tracking-tight md:text-7xl">
             The transport operations platform that{" "}
-            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-primary to-accent bg-clip-text text-transparent">
               enforces the rules
             </span>{" "}
             for you.
@@ -90,7 +90,7 @@ function Landing() {
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
               to="/login"
-              className="rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-glow transition hover:translate-y-[-1px]"
+              className="rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-glow transition hover:translate-y- -1px"
             >
               Open the dashboard →
             </Link>

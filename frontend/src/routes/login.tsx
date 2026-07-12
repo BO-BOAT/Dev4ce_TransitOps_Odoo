@@ -26,8 +26,8 @@ function LoginPage() {
   return (
     <div className="relative min-h-screen bg-background">
       <div className="absolute inset-0 grid-bg opacity-30" />
-      <div className="absolute -top-40 -left-40 size-[500px] rounded-full bg-primary/20 blur-[140px]" />
-      <div className="absolute -bottom-40 -right-40 size-[500px] rounded-full bg-accent/20 blur-[140px]" />
+      <div className="absolute -top-40 -left-40 size-500px rounded-full bg-primary/20 blur-140px" />
+      <div className="absolute -bottom-40 -right-40 size-500px rounded-full bg-accent/20 blur-140px" />
 
       <div className="relative mx-auto flex min-h-screen max-w-md flex-col justify-center px-6 py-12">
         <Link to="/" className="mb-8 flex items-center gap-2 self-center">
@@ -95,7 +95,7 @@ function LoginPage() {
                   className="flex w-full items-center justify-between rounded px-2 py-1 text-left text-xs hover:bg-background"
                 >
                   <span className="font-mono">{u.email}</span>
-                  <span className="rounded bg-primary/15 px-1.5 py-0.5 text-[10px] uppercase text-primary">
+                  <span className="rounded bg-primary/15 px-1.5 py-0.5 text-10px uppercase text-primary">
                     {u.role}
                   </span>
                 </button>
