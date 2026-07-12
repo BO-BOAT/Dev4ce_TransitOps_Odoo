@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppVehiclesRouteImport } from './routes/_app.vehicles'
 import { Route as AppTripsRouteImport } from './routes/_app.trips'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
+import { Route as AppMongodbDemoRouteImport } from './routes/_app.mongodb-demo'
 import { Route as AppMaintenanceRouteImport } from './routes/_app.maintenance'
 import { Route as AppExpensesRouteImport } from './routes/_app.expenses'
 import { Route as AppDriversRouteImport } from './routes/_app.drivers'
@@ -49,6 +50,11 @@ const AppReportsRoute = AppReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => AppRoute,
 } as any)
+const AppMongodbDemoRoute = AppMongodbDemoRouteImport.update({
+  id: '/mongodb-demo',
+  path: '/mongodb-demo',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppMaintenanceRoute = AppMaintenanceRouteImport.update({
   id: '/maintenance',
   path: '/maintenance',
@@ -77,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/drivers': typeof AppDriversRoute
   '/expenses': typeof AppExpensesRoute
   '/maintenance': typeof AppMaintenanceRoute
+  '/mongodb-demo': typeof AppMongodbDemoRoute
   '/reports': typeof AppReportsRoute
   '/trips': typeof AppTripsRoute
   '/vehicles': typeof AppVehiclesRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByTo {
   '/drivers': typeof AppDriversRoute
   '/expenses': typeof AppExpensesRoute
   '/maintenance': typeof AppMaintenanceRoute
+  '/mongodb-demo': typeof AppMongodbDemoRoute
   '/reports': typeof AppReportsRoute
   '/trips': typeof AppTripsRoute
   '/vehicles': typeof AppVehiclesRoute
@@ -101,6 +109,7 @@ export interface FileRoutesById {
   '/_app/drivers': typeof AppDriversRoute
   '/_app/expenses': typeof AppExpensesRoute
   '/_app/maintenance': typeof AppMaintenanceRoute
+  '/_app/mongodb-demo': typeof AppMongodbDemoRoute
   '/_app/reports': typeof AppReportsRoute
   '/_app/trips': typeof AppTripsRoute
   '/_app/vehicles': typeof AppVehiclesRoute
@@ -114,6 +123,7 @@ export interface FileRouteTypes {
     | '/drivers'
     | '/expenses'
     | '/maintenance'
+    | '/mongodb-demo'
     | '/reports'
     | '/trips'
     | '/vehicles'
@@ -125,6 +135,7 @@ export interface FileRouteTypes {
     | '/drivers'
     | '/expenses'
     | '/maintenance'
+    | '/mongodb-demo'
     | '/reports'
     | '/trips'
     | '/vehicles'
@@ -137,6 +148,7 @@ export interface FileRouteTypes {
     | '/_app/drivers'
     | '/_app/expenses'
     | '/_app/maintenance'
+    | '/_app/mongodb-demo'
     | '/_app/reports'
     | '/_app/trips'
     | '/_app/vehicles'
@@ -192,6 +204,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppReportsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/mongodb-demo': {
+      id: '/_app/mongodb-demo'
+      path: '/mongodb-demo'
+      fullPath: '/mongodb-demo'
+      preLoaderRoute: typeof AppMongodbDemoRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/maintenance': {
       id: '/_app/maintenance'
       path: '/maintenance'
@@ -228,6 +247,7 @@ interface AppRouteChildren {
   AppDriversRoute: typeof AppDriversRoute
   AppExpensesRoute: typeof AppExpensesRoute
   AppMaintenanceRoute: typeof AppMaintenanceRoute
+  AppMongodbDemoRoute: typeof AppMongodbDemoRoute
   AppReportsRoute: typeof AppReportsRoute
   AppTripsRoute: typeof AppTripsRoute
   AppVehiclesRoute: typeof AppVehiclesRoute
@@ -238,6 +258,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDriversRoute: AppDriversRoute,
   AppExpensesRoute: AppExpensesRoute,
   AppMaintenanceRoute: AppMaintenanceRoute,
+  AppMongodbDemoRoute: AppMongodbDemoRoute,
   AppReportsRoute: AppReportsRoute,
   AppTripsRoute: AppTripsRoute,
   AppVehiclesRoute: AppVehiclesRoute,
