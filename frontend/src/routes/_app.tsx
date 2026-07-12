@@ -1,10 +1,11 @@
 import { createFileRoute, Outlet, Link, useRouter, Navigate } from "@tanstack/react-router";
 import { useStore } from "@/lib/store";
+import { fetchApi } from "@/lib/api";
 import {
   LayoutDashboard, Truck, Users, Route as RouteIcon, Wrench, Receipt,
-  BarChart3, LogOut, Moon, Sun, Menu, X,
+  BarChart3, LogOut, Moon, Sun, Menu, X, Database
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const Route = createFileRoute("/_app")({
   component: AppLayout,
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/_app")({
 
 const nav = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/mongodb-demo", label: "MongoDB Data", icon: Database },
   { to: "/vehicles", label: "Vehicles", icon: Truck },
   { to: "/drivers", label: "Drivers", icon: Users },
   { to: "/trips", label: "Trips", icon: RouteIcon },
@@ -25,8 +27,91 @@ function AppLayout() {
   const logout = useStore((s) => s.logout);
   const theme = useStore((s) => s.theme);
   const toggleTheme = useStore((s) => s.toggleTheme);
+  const hydrate = useStore((s) => s.hydrate);
   const router = useRouter();
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      // Fetch initial data from backend
+      Promise.all([
+        fetchApi("/vehicles").catch(() => []),
+        fetchApi("/drivers").catch(() => []),
+        fetchApi("/trips").catch(() => []),
+        fetchApi("/maintenance").catch(() => []),
+        fetchApi("/finance/expenses").catch(() => []),
+        fetchApi("/finance/fuel").catch(() => []),
+      ]).then(([vehicles, drivers, trips, maintenance, backendExpenses, backendFuel]) => {
+        // Map backend responses to frontend shapes
+        const mappedVehicles = vehicles.map((v: any) => ({
+          ...v,
+          id: v._id || v.id,
+          regNumber: v.registration_number || v.regNumber,
+          maxLoadKg: v.capacity || v.maxLoadKg,
+          odometer: v.mileage || v.odometer,
+          region: v.depot || v.region,
+          type: "Truck", // Backend doesn't have type
+          acquisitionCost: 0, // Backend doesn't have cost
+        }));
+
+        const mappedDrivers = drivers.map((d: any) => ({
+          ...d,
+          id: d._id || d.id,
+          name: d.name || `${d.first_name} ${d.last_name}`,
+          licenseNumber: d.license_number || d.licenseNumber,
+          licenseExpiry: d.license_expiry || d.licenseExpiry,
+          contact: d.contact_number || d.contact,
+          safetyScore: d.safety_score || d.safetyScore,
+          licenseCategory: "C", // Mock category
+        }));
+
+        const mappedTrips = trips.map((t: any) => ({
+          ...t,
+          id: t._id || t.id,
+          vehicleId: t.vehicle_id || t.vehicleId,
+          driverId: t.driver_id || t.driverId,
+          cargoKg: t.cargo_weight || t.cargoKg,
+          plannedKm: t.planned_distance || t.plannedKm,
+          actualKm: t.actual_distance || t.actualKm,
+          createdAt: t.created_at || t.createdAt,
+          revenue: 0, // Mock revenue
+        }));
+
+        const mappedMaintenance = maintenance.map((m: any) => ({
+          ...m,
+          id: m._id || m.id,
+          vehicleId: m.vehicle_id || m.vehicleId,
+          startDate: m.start_date || m.startDate,
+          endDate: m.end_date || m.endDate,
+        }));
+
+        const expenses = [
+          ...backendExpenses.map((e: any) => ({ 
+            ...e, 
+            id: e._id || e.id,
+            vehicleId: e.vehicle_id || e.vehicleId,
+            kind: e.category || e.type || e.kind || "Other" 
+          })),
+          ...backendFuel.map((f: any) => ({ 
+            ...f, 
+            id: f._id || f.id,
+            vehicleId: f.vehicle_id || f.vehicleId,
+            kind: "Fuel", 
+            amount: f.cost 
+          }))
+        ];
+        
+        const currentStore = useStore.getState();
+        hydrate({ 
+          vehicles: mappedVehicles.length ? mappedVehicles : currentStore.vehicles, 
+          drivers: mappedDrivers.length ? mappedDrivers : currentStore.drivers, 
+          trips: mappedTrips.length ? mappedTrips : currentStore.trips, 
+          maintenance: mappedMaintenance.length ? mappedMaintenance : currentStore.maintenance, 
+          expenses: expenses.length ? expenses : currentStore.expenses 
+        });
+      });
+    }
+  }, [user, hydrate]);
 
   if (!user) return <Navigate to="/login" />;
 
