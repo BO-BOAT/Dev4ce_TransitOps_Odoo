@@ -34,7 +34,7 @@ function LoginPage() {
           <div className="grid size-10 place-items-center rounded-lg bg-primary text-primary-foreground shadow-glow">
             <Truck className="size-5" />
           </div>
-          <span className="font-display text-2xl font-bold">Fleetwave</span>
+          <span className="font-display text-2xl font-bold">TransitOps</span>
         </Link>
 
         <div className="rounded-2xl border border-border bg-card/80 p-8 backdrop-blur-xl shadow-elevated">

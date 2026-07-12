@@ -45,7 +45,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Fleetwave — Smart Transport Operations Platform" },
+      { title: "TransitOps — Smart Transport Operations Platform" },
       { name: "description", content: "End-to-end platform for vehicles, drivers, dispatch, maintenance, and expense management with real-time operational insights." },
       { property: "og:title", content: "Fleetwave — Smart Transport Operations" },
       { property: "og:description", content: "Digitize your fleet: dispatch, maintenance, fuel and expense tracking, all in one command center." },

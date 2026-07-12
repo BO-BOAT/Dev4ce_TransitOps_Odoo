@@ -40,7 +40,7 @@ function AppLayout() {
           <div className="grid size-8 place-items-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
             <Truck className="size-4" />
           </div>
-          <span className="font-display text-lg font-bold">Fleetwave</span>
+          <span className="font-display text-lg font-bold">TransitOps</span>
         </div>
         <nav className="flex-1 space-y-1 p-3">
           {nav.map((n) => {
