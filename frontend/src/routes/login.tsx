@@ -78,7 +78,7 @@ function LoginPage() {
               to="/"
               className="flex w-full items-center justify-center rounded-lg border border-border bg-card/40 py-2.5 text-sm font-semibold transition hover:bg-card"
             >
-              Home
+              ← Back
             </Link>
           </form>
 
