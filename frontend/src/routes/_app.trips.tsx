@@ -42,7 +42,9 @@ function LifecycleBar({ status }: { status: Trip["status"] }) {
       </div>
     );
   }
-  const idx = lifecycleSteps.indexOf(status as "Draft" | "Dispatched" | "Completed");
+  const idx = lifecycleSteps.indexOf(
+    status as "Draft" | "Dispatched" | "Completed",
+  );
   return (
     <div className="flex items-center gap-1">
       {lifecycleSteps.map((step, i) => (
@@ -59,9 +61,7 @@ function LifecycleBar({ status }: { status: Trip["status"] }) {
           </div>
           {i < lifecycleSteps.length - 1 && (
             <div
-              className={`h-px w-4 ${
-                i < idx ? "bg-primary/50" : "bg-border"
-              }`}
+              className={`h-px w-4 ${i < idx ? "bg-primary/50" : "bg-border"}`}
             />
           )}
         </div>
@@ -97,16 +97,27 @@ function TripsPage() {
     plannedKm: 0,
   });
 
+  const vehicleName = (id: string) =>
+    vehicles.find((v) => v.id === id)?.regNumber ?? "—";
+  const driverName = (id: string) =>
+    drivers.find((d) => d.id === id)?.name ?? "—";
+  const vehicleModel = (id: string) =>
+    vehicles.find((v) => v.id === id)?.model ?? "";
+
   const availableVehicles = vehicles.filter((v) => v.status === "Available");
   const availableDrivers = drivers.filter(
-    (d) =>
-      d.status === "Available" && new Date(d.licenseExpiry) > new Date(),
+    (d) => d.status === "Available" && new Date(d.licenseExpiry) > new Date(),
   );
 
   const filtered = trips
     .filter((t) => statusF === "all" || t.status === statusF)
     .filter((t) =>
-      [t.source, t.destination, driverName(t.driverId), vehicleName(t.vehicleId)]
+      [
+        t.source,
+        t.destination,
+        driverName(t.driverId),
+        vehicleName(t.vehicleId),
+      ]
         .join(" ")
         .toLowerCase()
         .includes(q.toLowerCase()),
@@ -138,13 +149,6 @@ function TripsPage() {
       plannedKm: 0,
     });
   };
-
-  const vehicleName = (id: string) =>
-    vehicles.find((v) => v.id === id)?.regNumber ?? "—";
-  const driverName = (id: string) =>
-    drivers.find((d) => d.id === id)?.name ?? "—";
-  const vehicleModel = (id: string) =>
-    vehicles.find((v) => v.id === id)?.model ?? "";
 
   const selectedVeh = vehicles.find((v) => v.id === form.vehicleId);
   const overCapacity = selectedVeh
@@ -181,10 +185,18 @@ function TripsPage() {
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         {[
           { label: "Total", value: stats.total, color: "text-foreground" },
-          { label: "Draft", value: stats.draft, color: "text-muted-foreground" },
+          {
+            label: "Draft",
+            value: stats.draft,
+            color: "text-muted-foreground",
+          },
           { label: "Active", value: stats.active, color: "text-primary" },
           { label: "Completed", value: stats.completed, color: "text-success" },
-          { label: "Cancelled", value: stats.cancelled, color: "text-destructive" },
+          {
+            label: "Cancelled",
+            value: stats.cancelled,
+            color: "text-destructive",
+          },
         ].map((s) => (
           <div
             key={s.label}
@@ -225,8 +237,7 @@ function TripsPage() {
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 font-display text-base font-semibold">
-                    {t.source}{" "}
-                    <span className="text-muted-foreground">→</span>{" "}
+                    {t.source} <span className="text-muted-foreground">→</span>{" "}
                     {t.destination}
                   </div>
                   <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
@@ -276,8 +287,7 @@ function TripsPage() {
                     </span>
                     {t.completedAt && (
                       <span>
-                        Completed{" "}
-                        {new Date(t.completedAt).toLocaleDateString()}
+                        Completed {new Date(t.completedAt).toLocaleDateString()}
                       </span>
                     )}
                     {t.actualKm != null && (
@@ -353,9 +363,7 @@ function TripsPage() {
               <input
                 required
                 value={form.source}
-                onChange={(e) =>
-                  setForm({ ...form, source: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, source: e.target.value })}
                 className="input"
                 placeholder="e.g. Mumbai"
               />
@@ -386,8 +394,8 @@ function TripsPage() {
                 <option value="">Select vehicle...</option>
                 {availableVehicles.map((v) => (
                   <option key={v.id} value={v.id}>
-                    {v.regNumber} — {v.model} ({v.maxLoadKg.toLocaleString()}{" "}
-                    kg capacity)
+                    {v.regNumber} — {v.model} ({v.maxLoadKg.toLocaleString()} kg
+                    capacity)
                   </option>
                 ))}
               </select>
@@ -399,16 +407,13 @@ function TripsPage() {
               <select
                 required
                 value={form.driverId}
-                onChange={(e) =>
-                  setForm({ ...form, driverId: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, driverId: e.target.value })}
                 className="input"
               >
                 <option value="">Select driver...</option>
                 {availableDrivers.map((d) => (
                   <option key={d.id} value={d.id}>
-                    {d.name} — Cat {d.licenseCategory} (Score:{" "}
-                    {d.safetyScore})
+                    {d.name} — Cat {d.licenseCategory} (Score: {d.safetyScore})
                   </option>
                 ))}
               </select>
@@ -419,9 +424,7 @@ function TripsPage() {
                 required
                 min={0}
                 value={form.cargoKg}
-                onChange={(e) =>
-                  setForm({ ...form, cargoKg: +e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, cargoKg: +e.target.value })}
                 className="input"
               />
               {overCapacity && (
@@ -432,8 +435,8 @@ function TripsPage() {
               )}
               {selectedVeh && !overCapacity && form.cargoKg > 0 && (
                 <p className="mt-1 text-xs text-muted-foreground">
-                  {Math.round((form.cargoKg / selectedVeh.maxLoadKg) * 100)}%
-                  of capacity used
+                  {Math.round((form.cargoKg / selectedVeh.maxLoadKg) * 100)}% of
+                  capacity used
                 </p>
               )}
             </Field>
@@ -532,10 +535,7 @@ function TripsPage() {
               />
             </Field>
             <div className="col-span-2 flex justify-end gap-2 pt-2">
-              <button
-                onClick={() => setCompleting(null)}
-                className="btn-ghost"
-              >
+              <button onClick={() => setCompleting(null)} className="btn-ghost">
                 Cancel
               </button>
               <button
